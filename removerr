@@ -1,0 +1,254 @@
+removerrrrrrrrrrrrrrrr
+
+template <class T>
+void Conjunto<T>::remover(const T& clave, Nodo* n) {
+
+    Nodo* proximo = buscar(clave, n);
+
+    if (!proximo->der && !proximo->izq) {
+
+        if (!proximo->padre)
+            this->raiz = NULL;
+        else {
+            if (proximo->padre->der == proximo)
+                proximo->padre->der = NULL;
+            else
+                proximo->padre->izq = NULL;
+        }
+
+    } else if (proximo->der && proximo->izq) {
+        
+        Nodo* m = max(proximo->izq);
+        
+        if (proximo == raiz)
+            raiz = m;
+
+        if (proximo == m->padre)
+            reemplazarConsecutivoIzquierdo(proximo);
+        else {
+            swap(m, proximo);
+
+            proximo->padre->der = proximo->izq;
+
+            if (proximo->izq)
+                proximo->izq->padre = proximo->padre;
+        }
+
+    } else {
+        Nodo* n = proximo->izq ? proximo->izq : proximo->der;
+
+        if (proximo->padre) {
+
+            if (proximo->padre->der == proximo)
+                proximo->padre->der = n;
+            else
+                proximo->padre->izq = n;
+
+            n->padre = proximo->padre;
+
+        } else {
+            n->padre = NULL;
+            raiz = n;
+        }
+    }
+
+
+    proximo->der = proximo->izq = proximo->padre = NULL;
+
+    delete proximo;
+
+    this->tam--;
+}
+
+// PRE: reemplazar->izq
+template <class T>
+void Conjunto<T>::reemplazarConsecutivoIzquierdo(Nodo* reemplazar) {
+    Nodo* p = reemplazar->izq;
+
+    if (reemplazar->padre) {
+        if (reemplazar->padre->der == reemplazar)
+            reemplazar->padre->der = p;
+        else
+            reemplazar->padre->izq = p;
+    }
+
+    p->padre = reemplazar->padre;
+
+    p->der = reemplazar->der;
+    p->der->padre = p;
+}
+
+// PRECONDICION: a, b != null
+template <class T>
+void Conjunto<T>::swap(Nodo* a, Nodo* b) {
+    Nodo* padreA = a->padre;
+    Nodo* padreB = b->padre;
+
+    if (padreA) {
+        if (padreA->der == a)
+            padreA->der = b;
+        else
+            padreA->izq = b;
+    }
+
+    if (padreB) {
+        if (padreB->der == b)
+            padreB->der = a;
+        else
+            padreB->izq = a;
+    }
+
+    if (a->izq)
+        a->izq->padre = b;
+    if (a->der)
+        a->der->padre = b;
+
+    if (b->izq)
+        b->izq->padre = a;
+    if (b->der)
+        b->der->padre = a;
+
+    Nodo* izq = b->izq, *der = b->der;
+
+    b->izq = a->izq;
+    b->der = a->der;
+    b->padre = padreA;
+
+    a->izq = izq != a ? izq : NULL;
+    a->der = der != a ? der : NULL;
+    a->padre = padreB;
+}
+
+
+// PRECONDICION: pertenece(clave)
+template <class T>
+void Conjunto<T>::remover(const T& clave) {
+    remover(clave, this->raiz);
+}
+
+------------------------------------------------------------------
+
+template <class T>
+void Conjunto<T>::remover(const T& clave, Nodo* n) {
+
+Nodo* proximo = buscar(clave, n);
+
+if (!proximo->der && !proximo->izq) {
+
+if (!proximo->padre)
+this->raiz = NULL;
+else {
+if (proximo->padre->der == proximo)
+proximo->padre->der = NULL;
+else
+proximo->padre->izq = NULL;
+}
+
+} else if (proximo->der && proximo->izq) {
+
+Nodo* m = max(proximo->izq);
+
+if (proximo == raiz)
+raiz = m;
+
+if (proximo == m->padre)
+reemplazarConsecutivoIzquierdo(proximo);
+else {
+swap(m, proximo);
+
+proximo->padre->der = proximo->izq;
+
+if (proximo->izq)
+proximo->izq->padre = proximo->padre;
+}
+
+} else {
+Nodo* n = proximo->izq ? proximo->izq : proximo->der;
+
+if (proximo->padre) {
+
+if (proximo->padre->der == proximo)
+proximo->padre->der = n;
+else
+proximo->padre->izq = n;
+
+n->padre = proximo->padre;
+
+} else {
+n->padre = NULL;
+raiz = n;
+}
+}
+
+
+proximo->der = proximo->izq = proximo->padre = NULL;
+
+delete proximo;
+
+this->tam--;
+}
+
+// PRE: reemplazar->izq
+template <class T>
+void Conjunto<T>::reemplazarConsecutivoIzquierdo(Nodo* reemplazar) {
+Nodo* p = reemplazar->izq;
+
+if (reemplazar->padre) {
+if (reemplazar->padre->der == reemplazar)
+reemplazar->padre->der = p;
+else
+reemplazar->padre->izq = p;
+}
+
+p->padre = reemplazar->padre;
+
+p->der = reemplazar->der;
+p->der->padre = p;
+}
+
+// PRECONDICION: a, b != null
+template <class T>
+void Conjunto<T>::swap(Nodo* a, Nodo* b) {
+Nodo* padreA = a->padre;
+Nodo* padreB = b->padre;
+
+if (padreA) {
+if (padreA->der == a)
+padreA->der = b;
+else
+padreA->izq = b;
+}
+
+if (padreB) {
+if (padreB->der == b)
+padreB->der = a;
+else
+padreB->izq = a;
+}
+
+if (a->izq)
+a->izq->padre = b;
+if (a->der)
+a->der->padre = b;
+
+if (b->izq)
+b->izq->padre = a;
+if (b->der)
+b->der->padre = a;
+
+Nodo* izq = b->izq, *der = b->der;
+
+b->izq = a->izq;
+b->der = a->der;
+b->padre = padreA;
+
+a->izq = izq != a ? izq : NULL;
+a->der = der != a ? der : NULL;
+a->padre = padreB;
+}
+
+// PRECONDICION: pertenece(clave)
+template <class T>
+void Conjunto<T>::remover(const T& clave) {
+remover(clave, this->raiz);
+}
