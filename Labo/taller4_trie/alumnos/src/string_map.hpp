@@ -10,7 +10,12 @@ string_map<T>::string_map(const string_map<T>& aCopiar) : string_map() { *this =
 template <typename T>
 string_map<T>& string_map<T>::operator=(const string_map<T>& d) {
     _size = d._size;
-    _raiz = d._raiz;
+    if(_raiz != NULL) {
+        borraHijos(_raiz);
+        delete _raiz;
+    }
+    _raiz = new Nodo(NULL,d._raiz->definicion);
+    copiaHijos(d._raiz, _raiz);
 }
 
 template <typename T>
@@ -49,7 +54,7 @@ T& string_map<T>::at(const string& clave) {
 
 template <typename T>
 void string_map<T>::erase(const string& clave) {
-    Nodo* n = buscamePuntero(clave, 0, _raiz);
+    Nodo* n = buscamePuntero(clave,_raiz);
     if(n->siguientes == NULL){
         while(!hermanosTienenHijos(n)){
             n = n->padre;
@@ -88,20 +93,22 @@ void string_map<T>::borraHijos(string_map::Nodo *d) {
 template <typename T>
 T& string_map<T>::buscameEsta(const string &clave, string_map::Nodo *d) {
     if (count(clave) == 0) _size++;
-    return *buscamePuntero(clave,0, d)->definicion;
+    return *buscamePuntero(clave, d)->definicion;
 }
 
 template <typename T>
-typename string_map<T>::Nodo *string_map<T>::buscamePuntero(const string &clave, int pos, string_map::Nodo* d) {
-    if(clave.size()-1 < pos){
-        return d;
-    } else if(d->siguientes == NULL){
-        d->siguientes = new Nodo*[256];
-        for (int i = 0; i < 256; ++i) {
-            d->siguientes[i] = new Nodo(d, NULL);
+typename string_map<T>::Nodo *string_map<T>::buscamePuntero(const string &clave, string_map::Nodo* d) {
+    Nodo* n = d;
+    for (int j = 0; j < clave.size(); ++j) {
+        if(n->siguientes == NULL) {
+            n->siguientes = new Nodo *[256];
+            for (int i = 0; i < 256; ++i) {
+                n->siguientes[i] = new Nodo(d, NULL);
+            }
         }
-        return buscamePuntero(clave, pos+1, d->siguientes[(char)clave[pos]]);
+        n = n->siguientes[(char)clave[j]];
     }
+    return n;
 }
 
 template <typename T>
@@ -129,6 +136,19 @@ bool string_map<T>::hermanosTienenHijos(string_map::Nodo *d) {
     }
     return res;
 }
+
+template <typename T>
+void string_map<T>::copiaHijos(string_map<T>::Nodo *desde, string_map<T>::Nodo *hacia) {
+    while(desde->siguientes != NULL){
+        hacia->siguientes = new Nodo*[256];
+        for (int i = 0; i < 256; ++i) {
+            hacia->siguientes[i] = new Nodo(hacia, desde->siguientes[i]->definicion);
+            copiaHijos(desde->siguientes[i], hacia->siguientes[i]);
+        }
+    }
+}
+
+
 
 
 

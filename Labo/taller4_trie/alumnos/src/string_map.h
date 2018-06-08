@@ -86,12 +86,12 @@ private:
     Nodo* _raiz;
     int _size;
 
-
+    void copiaHijos (Nodo* desde, Nodo* hacia);
     void borraHijos(Nodo* d);
     T& buscameEsta(const string &clave, Nodo* d);
     bool laDefini(const string &clave, int pos, Nodo* d)const;
     T& atNodo(const string &c, Nodo* d);
-    Nodo* buscamePuntero(const string &clave, int pos, Nodo* d);
+    Nodo* buscamePuntero(const string &clave, Nodo* d);
     bool hermanosTienenHijos(Nodo* d);
 };
 
