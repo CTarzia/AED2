@@ -80,7 +80,9 @@ private:
         Nodo** siguientes;
         T* definicion;
         Nodo* padre;
-        Nodo(Nodo* pad, T* def) : siguientes(NULL), padre(pad), definicion(def){};
+        Nodo(Nodo* pad, T* def) : siguientes(NULL), padre(pad), definicion(new T(*def)){};
+        Nodo(Nodo* pad) : siguientes(NULL), padre(pad), definicion(NULL){};
+        ~Nodo();
     };
 
     Nodo* _raiz;
@@ -89,13 +91,11 @@ private:
     void copiaHijos (Nodo* desde, Nodo* hacia);
     void borraHijos(Nodo* d);
     T& buscameEsta(const string &clave, Nodo* d);
-    bool laDefini(const string &clave, int pos, Nodo* d)const;
-    T& atNodo(const string &c, Nodo* d);
+    bool laDefini(const string &clave, Nodo* d)const;
+    //T& atNodo(const string &c, Nodo* d);
     Nodo* buscamePuntero(const string &clave, Nodo* d);
     bool hermanosTienenHijos(Nodo* d);
 };
-
-
 
 
 #include "string_map.hpp"
