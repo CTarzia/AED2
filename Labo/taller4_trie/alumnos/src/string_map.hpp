@@ -26,7 +26,20 @@ string_map<T>& string_map<T>::operator=(const string_map<T>& d) {
 
 template <typename T>
 string_map<T>::Nodo::~Nodo() {
-    if (this != NULL) {
+    delete this->definicion;
+    this->definicion = NULL;
+    if (this->siguientes != NULL) {
+        for (int i = 0; i < 256; ++i) {
+            if (this->siguientes[i] != NULL) {
+                delete this->siguientes[i];
+                this->siguientes[i] = NULL;
+            }
+        }
+    }
+    delete [] this->siguientes;
+    this->siguientes = NULL;
+    this->padre = NULL;
+    /*if (this != NULL) {
         this->padre = NULL;
         if (this->siguientes != NULL) {
             for (int i = 0; i < 256; ++i) {
@@ -42,7 +55,7 @@ string_map<T>::Nodo::~Nodo() {
             delete this->definicion;
             this->definicion = NULL;
         }
-    }
+    }*/
 }
 
 template <typename T>
@@ -83,7 +96,6 @@ T& string_map<T>::at(const string& clave) {
 template <typename T>
 void string_map<T>::erase(const string& clave) {
     if(_size == 1){
-        //borraHijos(_raiz);
         delete _raiz;
         _raiz = NULL;
     } else {
@@ -91,15 +103,19 @@ void string_map<T>::erase(const string& clave) {
         delete n->definicion;
         n->definicion = NULL;
         if (n->siguientes == NULL) {
-            Nodo* m;
             while (!hermanosTienenHijos(n)) {
-                m = n->padre;
-                delete n;
-                n = m;
-                /*n = n->padre;
-                borraHijos(n);
-                 */
+                n = n->padre;
             }
+            Nodo* m = n->padre;
+            int pos;
+            for (int i = 0; i < 256; ++i) {
+                if(m->siguientes[i]==n) {
+                    pos = i;
+                }
+            }
+            m->siguientes[pos] = NULL;
+            delete n;
+
         }
     }
     _size --;
@@ -115,18 +131,6 @@ bool string_map<T>::empty() const{
     return _size == 0;
 }
 
-template <typename T>
-void string_map<T>::borraHijos(string_map::Nodo *d) {
-    if(d->siguientes != NULL){
-        for (int i = 0; i < 256; ++i) {
-            borraHijos(d->siguientes[i]);
-        }
-    }
-    if (d->definicion != NULL){
-        delete d->definicion;
-    }
-    delete d;
-}
 
 template <typename T>
 T& string_map<T>::buscameEsta(const string &clave, string_map::Nodo *d) {
@@ -155,22 +159,26 @@ typename string_map<T>::Nodo *string_map<T>::buscamePuntero(const string &clave,
 
 template <typename T>
 bool string_map<T>::laDefini(const string &clave, string_map::Nodo *d) const {
-    bool res = false;
+    //bool res = false;
     if(_size != 0) {
         Nodo* n = d;
-        bool salir = false;
-        for (int i = 0; i <= clave.size() and !salir; ++i) {
-            if (i == clave.size() and n->definicion != NULL) {
-                res = true;
-                salir = true;
+        //bool salir = false;
+        for (int i = 0; i <= clave.size(); ++i) {
+            if (n == NULL){
+                return false;
+            } else if (i == clave.size() and n->definicion != NULL) {
+                //res = true;
+                //salir = true;
+                return true;
             } else if (n->siguientes == NULL) {
-                salir = true;
+                return false;
             } else if (i < clave.size()){
                 n = n->siguientes[(char)clave[i]];
             }
         }
     }
-    return res;
+    return false;
+    //return res;
 }
 
 template <typename T>

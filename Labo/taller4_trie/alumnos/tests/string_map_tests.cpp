@@ -132,7 +132,6 @@ TEST(string_map_test, no_aliasing) {
 	ASSERT_FALSE(singleton.count("hare") == 1);
 }
 
-
 TEST(string_map_test, TrieDeTries) {
     string_map<int> vacio;
     string_map<int> singleton;
@@ -180,7 +179,6 @@ TEST(string_map_test, eraseUnicaClave) {
     EXPECT_FALSE(singleton.count("hola") == 1);
 }
 
-
 TEST(string_map_test, erase) {
     string_map<int> sin_prefijos;
     string_map<int> con_prefijos;
@@ -216,7 +214,6 @@ TEST(string_map_test, erase) {
     sin_prefijos.erase("adios");
     EXPECT_FALSE(sin_prefijos.count("adios") == 1);
 }
-
 
 int main(int argc, char* argv[]) {
 	testing::InitGoogleTest(&argc, argv);

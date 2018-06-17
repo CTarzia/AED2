@@ -89,7 +89,6 @@ private:
     int _size;
 
     void copiaHijos (Nodo* desde, Nodo* hacia);
-    void borraHijos(Nodo* d);
     T& buscameEsta(const string &clave, Nodo* d);
     bool laDefini(const string &clave, Nodo* d)const;
     //T& atNodo(const string &c, Nodo* d);
